@@ -1,19 +1,17 @@
 
-
-
-
 # Import the necessary libraries
 import numpy as np
 import cv2 
 import matplotlib.pyplot as plt
 
 
+# loading the classifiers 
 
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
 
-cap = cv2.VideoCapture('face.mp4')
 
+cap = cv2.VideoCapture('face.mp4')
 #out = cv2.VideoWriter('output.avi',cv2.VideoWriter_fourcc('M','P','E','G'), 10, (768,432)) 
 
     
@@ -29,6 +27,12 @@ while 1:
             cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
             roi_gray = gray[y:y+h, x:x+w]
             roi_color = img[y:y+h, x:x+w]
+            
+            
+            #to play the full video with bounding box uncomment the next line
+            #cv2.imshow('img',img)
+            
+            #this line displays only the part of the image that has a face 
             cv2.imshow('img',roi_color)
             #joining all frames that have a face in them 
             #out.write(img)
