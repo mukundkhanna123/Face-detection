@@ -28,18 +28,20 @@ while 1:
             roi_gray = gray[y:y+h, x:x+w]
             roi_color = img[y:y+h, x:x+w]
             
+            #this line displays only the part of the image that has a face 
+            cv2.imshow('img',roi_color)
+            
+            #joining all frames that have a face in them 
+            #out.write(img)
+            
+            eyes = eye_cascade.detectMultiScale(roi_gray)
+            for (ex,ey,ew,eh) in eyes:
+                cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
             
             #to play the full video with bounding box uncomment the next line
             #cv2.imshow('img',img)
             
-            #this line displays only the part of the image that has a face 
-            cv2.imshow('img',roi_color)
-            #joining all frames that have a face in them 
-            #out.write(img)
-            eyes = eye_cascade.detectMultiScale(roi_gray)
-            for (ex,ey,ew,eh) in eyes:
-                cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
-
+            
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     else:
