@@ -1,3 +1,10 @@
+"""
+This program takes as input closely cropped images and calculates their face embeddings
+It uniquely identifies and stores the face and deletes similar faces. 
+the path to the unique and raw images should be changed accordingly 
+
+
+"""
 import numpy as np
 import cv2
 import os
