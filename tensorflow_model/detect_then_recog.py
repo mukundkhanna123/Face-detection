@@ -1,3 +1,15 @@
+"""
+This program first detects faces in a video from a live stream using a pre trained ssd then calculates the 128d face embeddings from it and saves
+the different faces. Some parameter tuning is required based on the camera you are using. 
+
+
+Also create two directories where this program is stored-
+1.   raw_data
+2.   Unique_data
+""""
+
+
+
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # pylint: disable=C0103
