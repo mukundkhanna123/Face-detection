@@ -5,10 +5,8 @@ the different faces. Some parameter tuning is required based on the camera you a
 
 Also create two directories where this program is stored-
 1.   raw_data
-2.   Unique_data
-""""
-
-
+2.   unique_data
+"""
 
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
