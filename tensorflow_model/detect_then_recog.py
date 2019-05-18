@@ -3,9 +3,10 @@ This program first detects faces in a video from a live stream using a pre train
 the different faces. Some parameter tuning is required based on the camera you are using. 
 
 
-Also create two directories where this program is stored-
+Also create the following  directories where this program is stored and provide the absolute path to the variables below -
 1.   raw_data
 2.   unique_data
+3.   video directory 
 """
 
 #!/usr/bin/python
