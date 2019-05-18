@@ -91,42 +91,74 @@ class TensoflowFaceDector(object):
 
 
 if __name__ == "__main__":
-    iter_no = 1
-    while (True):
+
+    def adjust_gamma(image):
+
+        invGamma = 1.0/2
+        table = np.array([((i/255.0) ** invGamma) * 255 for i in np.arange(0,256)]).astype("uint8")
+        return cv2.LUT(image,table)
+
+
+    vid_no = 1
+    frame_count = 0
+    im_saved = 0
+    total_image = 0
+
+    #enter the directory where the videos are stored
+    vid_dir = "C:/Users/Mukund/Downloads/Models/tensorflow_model/videos"
+
+    #create a temporary directory to hold the images
+    image_dir   = "C:/Users/Mukund/Downloads/Models/tensorflow_model/raw_data"
+
+    #output directory where you want the unique faces to be stored
+    output_dir  = "C:/Users/Mukund/Downloads/Models/tensorflow_model/unique_data"
+    videos = os.listdir(vid_dir)
+
+    #uncomment this if you don't want a highlight video of motion detection 
+    check_motion(vid_dir)
+    
+    for file in videos:
+
+        vid_path = vid_dir + "/" + file
+        
+        ctime = datetime.fromtimestamp(os.path.getctime(vid_path)).hour
+        
+        time_data = []     
         img_no = 0
-        print("encodings and clustering done")        
+
         tDetector = TensoflowFaceDector(PATH_TO_CKPT)
-        #rtsp://admin:Flora123@192.168.1.184:554/Streaming/Channels/101
-        cap = cv2.VideoCapture('rtsp://admin:Flora123@192.168.1.184:554/Streaming/Channels/401')
+        
+        cap = cv2.VideoCapture(vid_path)
+        print("video loaded")
         windowNotSet = True
         
-        #set capture duration (seconds)
-        cap_duration = 30
-
-        start_time = time.time()
-        cap_times = [ i for i in range(0,cap_duration)] 
-        while (int(time.time() - start_time) < cap_duration ):
+        fps = cap.get(cv2.CAP_PROP_FPS)
+        
+        while (True ):
         
             ret, image = cap.read()
+            frame_count += 1
             if ret == False:
                 break
-            a= time.time()
-            copy_image = image
-            if round(a - start_time,1) in cap_times :
-                
+            
+            vid_time = frame_count/(fps * 60 * 60)
+            if True :
+
+                copy_image = adjust_gamma(image)
                 [h, w] = image.shape[:2]
-                (boxes, scores, classes, num_detections) = tDetector.run(image)
+                (boxes, scores, classes, num_detections) = tDetector.run(copy_image)
                 
-                total_boxes=vis_util.visualize_boxes_and_labels_on_image_array(image,np.squeeze(boxes),np.squeeze(classes).astype(np.int32),np.squeeze(scores),category_index,use_normalized_coordinates=True,line_thickness=4)
+                total_boxes=vis_util.visualize_boxes_and_labels_on_image_array(copy_image,np.squeeze(boxes),np.squeeze(classes).astype(np.int32),np.squeeze(scores),category_index,use_normalized_coordinates=True,line_thickness=4)
             
                 for box in total_boxes:
                     ymin = int(box[0] * h)
                     xmin = int(box[1] * w)
                     ymax = int(box[2] * h)
                     xmax = int(box[3] * w)
-                    cropped = copy_image[ymin-10:ymax+10, xmin-10:xmax+10]
+                    cropped = image[ymin-10:ymax+10, xmin-10:xmax+10]
                     
-                    cv2.imwrite('C:/Users/Mukund/Downloads/Models/tensorflow_model/raw_data/image' + str(img_no) + '.jpg', cropped)
+                    cv2.imwrite(image_dir + "/" + str(img_no) + '.jpg', cropped)
+                    time_data.extend([vid_time + ctime])
                     img_no += 1     
                 
                     
@@ -140,9 +172,11 @@ if __name__ == "__main__":
                     break
         cap.release()
         cv2.destroyAllWindows()
-        print("total images stored ",img_no) 
-        im_saved = check_encodings(iter_no)
-        iter_no += 1
+        total_image += img_no
+        im_saved += check_encodings(image_dir,output_dir,vid_no,time_data)
+        vid_no += 1
+    print("total number of times a face was detected:", total_image)
+    print("total unique individuals found", im_saved)
         
         
 
