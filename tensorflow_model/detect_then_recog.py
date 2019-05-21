@@ -93,12 +93,6 @@ class TensoflowFaceDector(object):
 
 if __name__ == "__main__":
 
-    def adjust_gamma(image):
-
-        invGamma = 1.0/2
-        table = np.array([((i/255.0) ** invGamma) * 255 for i in np.arange(0,256)]).astype("uint8")
-        return cv2.LUT(image,table)
-
 
     vid_no = 1
     frame_count = 0
@@ -145,7 +139,7 @@ if __name__ == "__main__":
             vid_time = frame_count/(fps * 60 * 60)
             if True :
 
-                copy_image = adjust_gamma(image)
+                copy_image = image
                 [h, w] = image.shape[:2]
                 (boxes, scores, classes, num_detections) = tDetector.run(copy_image)
                 
